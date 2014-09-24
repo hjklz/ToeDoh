@@ -7,10 +7,11 @@ import com.aayao.todolist.data.Item;
 
 import android.os.Bundle;
 import android.app.Activity;
-//import android.app.AlertDialog;
-//import android.content.DialogInterface;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +22,8 @@ public class MainActivity extends Activity implements View.OnClickListener//, Di
 	private EditText itemTxt;
 	private Button addItem;
 	private ListView itemList;
+	
+	private int contextMenuParentID; //holds the parent of context menu (which item caused the menu to open)
 	
 	private ArrayList<Item> toDoItems;
 	private ArrayAdapter<Item> aa;
@@ -50,11 +53,11 @@ public class MainActivity extends Activity implements View.OnClickListener//, Di
 		
 		itemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 		    @Override  
-		    public void onItemClick(AdapterView<?> parent, View item, int position, long id) {  
-		        Item thing = aa.getItem(position);  
-		        thing.toggle();  
-		        itemViewHolder viewHolder = (itemViewHolder)item.getTag();  
-		        viewHolder.getCheckBox().setChecked(thing.getCheck());  
+		    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {  
+		        Item item = aa.getItem(position);  
+		        item.toggle();  
+		        itemViewHolder viewHolder = (itemViewHolder)v.getTag();  
+		        viewHolder.getCheckBox().setChecked(item.getCheck());  
 		    }
 		});
 		
@@ -87,19 +90,26 @@ public class MainActivity extends Activity implements View.OnClickListener//, Di
 		getMenuInflater().inflate(R.menu.item_menu, menu);
 		
 		if (v.getId() == R.id.itemList) {
-		    ListView lv = (ListView) v;
 		    AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
-		    Item obj = (Item)lv.getItemAtPosition(acmi.position);
-
-		    menu.add(obj.getName());
-		    menu.add(String.valueOf(obj.getCheck()));
+		    contextMenuParentID = acmi.position;
+		    
+		    //menu.add(contextMenuParent.getName());
+		    //menu.add(String.valueOf(contextMenuParent.getCheck()));
 		}
 	}
 	
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		
-		return true;
+		if (item.getTitle().equals("Edit")) {
+			editItem(contextMenuParentID);
+			return true;
+	    } else if (item.getTitle().equals("Delete")) {
+	    	//Toast.makeText(this, "Delete called", Toast.LENGTH_SHORT).show();
+	    	deleteItem(contextMenuParentID);
+	    	return true;
+	    } else {
+	        return false;
+	    }		
 	}
 	
 	/*
@@ -141,16 +151,55 @@ public class MainActivity extends Activity implements View.OnClickListener//, Di
 		}
 	}
 	
-	/*
 	private void deleteItem(int itemId) {
 		if (itemId >= 0) {
-			String itemName = (String)itemList.getItemAtPosition(itemId);
-			Toast.makeText(getApplicationContext(), itemName + " deleted", Toast.LENGTH_SHORT).show();
+			Item item = (Item)itemList.getItemAtPosition(itemId);
+			Toast.makeText(getApplicationContext(), item.getName() + " deleted", Toast.LENGTH_SHORT).show();
 			this.toDoItems.remove(itemId);
 			aa.notifyDataSetChanged();
 		}
 	}
-	*/
+	
+	private void editItem(int itemId) {
+		if (itemId >= 0) {
+			final Item item = (Item)itemList.getItemAtPosition(itemId);
+			
+            // get prompts.xml view
+            LayoutInflater layoutInflater = LayoutInflater.from(this);
+ 
+            View promptView = layoutInflater.inflate(R.layout.edit_prompt, null);
+ 
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+ 
+            // set edit_prompt.xml to be the layout file of the alertdialog builder
+            alertDialogBuilder.setView(promptView);
+ 
+            final EditText input = (EditText) promptView.findViewById(R.id.userInput);
+ 
+            // setup a dialog window
+            alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // get user input and set it to result
+                    	item.setName(input.getText().toString());
+                    	Toast.makeText(getApplicationContext(), item.getName() + " edited", Toast.LENGTH_SHORT).show();
+            			aa.notifyDataSetChanged();
+                    }
+                })
+                .setNegativeButton("Cancel",
+                    new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+ 
+            // create an alert dialog
+            AlertDialog alertD = alertDialogBuilder.create();
+ 
+            alertD.show();
+		}
+	}
 		
 	@Override
 	public void onClick(View v)
