@@ -23,6 +23,10 @@ public class Item
 		return isChecked;
 	}
 	
+	public void setChecked(boolean checked) {  
+	    isChecked = checked;  
+	}  
+	
 	public boolean toggle() {
 		isChecked = !isChecked;
 		return isChecked;

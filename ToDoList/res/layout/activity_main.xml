@@ -9,7 +9,7 @@
     tools:context=".MainActivity" >
 
     <EditText
-        android:id="@+id/Item"
+        android:id="@+id/itemTxt"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/itemList"
-        android:layout_below="@+id/Item"
+        android:layout_below="@+id/itemTxt"
         android:text="@string/add" />
 
     <ListView

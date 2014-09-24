@@ -2,10 +2,13 @@ package com.aayao.todolist;
 
 import java.util.ArrayList;
 
-import com.example.todolist.R;
+import com.aayao.todo.R;
+import com.aayao.todolist.data.Item;
 
 import android.os.Bundle;
 import android.app.Activity;
+//import android.app.AlertDialog;
+//import android.content.DialogInterface;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -15,12 +18,12 @@ import android.widget.*;
 
 public class MainActivity extends Activity implements View.OnClickListener//, DialogInterface.OnClickListener
 {
-	private EditText Item;
+	private EditText itemTxt;
 	private Button addItem;
 	private ListView itemList;
 	
-	private ArrayList<String> toDoItems;
-	private ArrayAdapter<String> aa;
+	private ArrayList<Item> toDoItems;
+	private ArrayAdapter<Item> aa;
 	
 	/*
 	String[] hot = {"Coffee", "Tea", "Hot Chocolate"};
@@ -35,26 +38,29 @@ public class MainActivity extends Activity implements View.OnClickListener//, Di
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		Item = (EditText)findViewById(R.id.Item);
+		itemTxt = (EditText)findViewById(R.id.itemTxt);
 		addItem = (Button)findViewById(R.id.addItem);
 		itemList = (ListView)findViewById(R.id.itemList);
 		registerForContextMenu(itemList);
 		
 		addItem.setOnClickListener(this);
 		
-		toDoItems = new ArrayList<String>();
-		aa = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, toDoItems);
-		itemList.setAdapter(aa);
+		toDoItems = new ArrayList<Item>();
+		//aa = new ArrayAdapter<Item>(this, android.R.layout.simple_list_item_1, toDoItems);
 		
-		 itemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-		      @Override  
-		      public void onItemClick(AdapterView<?> parent, View item, int position, long id) {  
-		        String thing = aa.getItem(position);  
-		        thing.toggleChecked();  
-		        ItemViewHolder viewHolder = (ItemViewHolder)item.getTag();  
-		        viewHolder.getCheckBox().setChecked(thing.isChecked());  
-		      }
-		 });
+		itemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		    @Override  
+		    public void onItemClick(AdapterView<?> parent, View item, int position, long id) {  
+		        Item thing = aa.getItem(position);  
+		        thing.toggle();  
+		        itemViewHolder viewHolder = (itemViewHolder)item.getTag();  
+		        viewHolder.getCheckBox().setChecked(thing.getCheck());  
+		    }
+		});
+		
+		// Set custom array adapter as the ListView's adapter.
+		aa = new listArrayAdapter(this, toDoItems);
+		itemList.setAdapter(aa);
 	}
 
 	@Override
@@ -76,17 +82,17 @@ public class MainActivity extends Activity implements View.OnClickListener//, Di
 	}
 	
 	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		getMenuInflater().inflate(R.menu.item_menu, menu);
 		
 		if (v.getId() == R.id.itemList) {
 		    ListView lv = (ListView) v;
 		    AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
-		    String obj = (String) lv.getItemAtPosition(acmi.position);
+		    Item obj = (Item)lv.getItemAtPosition(acmi.position);
 
-		    menu.add(obj);
+		    menu.add(obj.getName());
+		    menu.add(String.valueOf(obj.getCheck()));
 		}
 	}
 	
@@ -126,12 +132,12 @@ public class MainActivity extends Activity implements View.OnClickListener//, Di
 	}
 	*/
 
-	private void addItem(String item) {
-		if (item.length() > 0) {
-			Toast.makeText(getApplicationContext(), item + " added", Toast.LENGTH_SHORT).show();
-			this.toDoItems.add(item);
+	private void addItem(String name) {
+		if (name.length() > 0) {
+			Toast.makeText(getApplicationContext(), name + " added", Toast.LENGTH_SHORT).show();
+			this.toDoItems.add(new Item(name));
 			this.aa.notifyDataSetChanged();
-			this.Item.setText("");
+			this.itemTxt.setText("");
 		}
 	}
 	
@@ -150,7 +156,7 @@ public class MainActivity extends Activity implements View.OnClickListener//, Di
 	public void onClick(View v)
 	{
 		if (v == this.addItem) {
-			this.addItem(this.Item.getText().toString());
+			this.addItem(this.itemTxt.getText().toString());
 		}
 		
 	}
