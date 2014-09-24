@@ -8,28 +8,29 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.view.KeyEvent;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnKeyListener;
 import android.widget.*;
 
-public class MainActivity extends Activity implements View.OnClickListener, DialogInterface.OnClickListener, OnKeyListener
+public class MainActivity extends Activity implements View.OnClickListener//, DialogInterface.OnClickListener
 {
-	EditText Item;
-	Button addItem;
-	ListView itemList;
+	private EditText Item;
+	private Button addItem;
+	private ListView itemList;
 	
 	ArrayList<String> toDoItems;
 	ArrayAdapter<String> aa;
 	
+	/*
 	String[] hot = {"Coffee", "Tea", "Hot Chocolate"};
 	String[] wine = {"Burgundy", "Pinot", "Merlot"};
 	String[] beer = {"Guiness", "Pedigree", "Artois"};
 	String[] cocktail = {"Mary", "Vodka", "Colada"};
 	String[] can = {"Coke", "Fanta", "Lemonade"};
-	String currentMenu;
+	String currentMenu;*/
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -39,9 +40,9 @@ public class MainActivity extends Activity implements View.OnClickListener, Dial
 		Item = (EditText)findViewById(R.id.Item);
 		addItem = (Button)findViewById(R.id.addItem);
 		itemList = (ListView)findViewById(R.id.itemList);
+		registerForContextMenu(itemList);
 		
 		addItem.setOnClickListener(this);
-		Item.setOnKeyListener(this);
 		
 		toDoItems = new ArrayList<String>();
 		aa = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, toDoItems);
@@ -55,15 +56,39 @@ public class MainActivity extends Activity implements View.OnClickListener, Dial
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		
+		/*
 		menu.add("hot");
 		menu.add("wine");
 		menu.add("beer");
 		menu.add("cocktail");
 		menu.add("can");
+		*/
 		
 		return true;
 	}
 	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		getMenuInflater().inflate(R.menu.item_menu, menu);
+		
+		if (v.getId() == R.id.itemList) {
+		    ListView lv = (ListView) v;
+		    AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
+		    String obj = (String) lv.getItemAtPosition(acmi.position);
+
+		    menu.add(obj);
+		}
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		
+		return true;
+	}
+	
+	/*
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		super.onOptionsItemSelected(item);
@@ -91,7 +116,8 @@ public class MainActivity extends Activity implements View.OnClickListener, Dial
 		}
 		return true;
 	}
-	
+	*/
+
 	private void addItem(String item) {
 		if (item.length() > 0) {
 			Toast.makeText(getApplicationContext(), item + " added", Toast.LENGTH_SHORT).show();
@@ -109,14 +135,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Dial
 			aa.notifyDataSetChanged();
 		}
 	}
-	
-	private void displayPopup(String title, String[] items) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(title);
-		builder.setItems(items,  this);
-		builder.show();
-	}
-	
+		
 	@Override
 	public void onClick(View v)
 	{
@@ -126,15 +145,14 @@ public class MainActivity extends Activity implements View.OnClickListener, Dial
 		
 	}
 	
-	@Override
-	public boolean onKey(View v, int keyCode, KeyEvent event)
-	{
-		if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
-			this.addItem(this.Item.getText().toString());
-		}
-		return false;
+	/*	
+	private void displayPopup(String title, String[] items) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(title);
+		builder.setItems(items,  this);
+		builder.show();
 	}
-
+	
 	@Override
 	public void onClick(DialogInterface dialog, int item)
 	{
@@ -155,5 +173,6 @@ public class MainActivity extends Activity implements View.OnClickListener, Dial
 		}
 		
 	}
+	*/
 
 }
