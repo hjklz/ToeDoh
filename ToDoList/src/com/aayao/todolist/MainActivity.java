@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -17,7 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 
-public class MainActivity extends Activity implements View.OnClickListener//, DialogInterface.OnClickListener
+public class MainActivity extends Activity implements View.OnClickListener
 {
 	private EditText itemTxt;
 	private Button addItem;
@@ -27,6 +28,9 @@ public class MainActivity extends Activity implements View.OnClickListener//, Di
 	
 	private ArrayList<Item> toDoItems;
 	private ArrayAdapter<Item> aa;
+	
+	private ArrayList<Item> archiveItems;
+	public final static String ARCHIVED = "com.aayao.todolist.ArchivedItems";
 	
 	/*
 	String[] hot = {"Coffee", "Tea", "Hot Chocolate"};
@@ -49,6 +53,7 @@ public class MainActivity extends Activity implements View.OnClickListener//, Di
 		addItem.setOnClickListener(this);
 		
 		toDoItems = new ArrayList<Item>();
+		archiveItems = new ArrayList<Item>();
 		//aa = new ArrayAdapter<Item>(this, android.R.layout.simple_list_item_1, toDoItems);
 		
 		itemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -72,14 +77,6 @@ public class MainActivity extends Activity implements View.OnClickListener//, Di
 		super.onCreateOptionsMenu(menu);
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
-		
-		/*
-		menu.add("hot");
-		menu.add("wine");
-		menu.add("beer");
-		menu.add("cocktail");
-		menu.add("can");
-		*/
 		
 		return true;
 	}
@@ -107,40 +104,28 @@ public class MainActivity extends Activity implements View.OnClickListener//, Di
 	    	//Toast.makeText(this, "Delete called", Toast.LENGTH_SHORT).show();
 	    	deleteItem(contextMenuParentID);
 	    	return true;
+	    } else if (item.getTitle().equals("Archive")) {
+	    	//Toast.makeText(this, "Delete called", Toast.LENGTH_SHORT).show();
+	    	archiveItem(contextMenuParentID);
+	    	return true;
 	    } else {
 	        return false;
 	    }		
 	}
 	
-	/*
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		super.onOptionsItemSelected(item);
-		if (!item.hasSubMenu()){
-			if (item.getTitle() == "hot") {
-				currentMenu = "hot";
-				this.displayPopup("Hot Drinks", this.hot);
-			}
-			if (item.getTitle() == "wine") {
-				currentMenu = "wine";
-				this.displayPopup("Wines", this.wine);
-			}
-			if (item.getTitle() == "beer") {
-				currentMenu = "beer";
-				this.displayPopup("Beers", this.beer);
-			}
-			if (item.getTitle() == "cocktail") {
-				currentMenu = "cocktail";
-				this.displayPopup("Cabinet", this.cocktail);
-			}
-			if (item.getTitle() == "can") {
-				currentMenu = "can";
-				this.displayPopup("Soft Drinks", this.can);
-			}
+		
+		if (item.getTitle().equals("View Archived Items")) {
+			//Toast.makeText(getApplicationContext(), "works", Toast.LENGTH_SHORT).show();
+			Intent intent = new Intent(this, ArchiveActivity.class);
+			intent.putParcelableArrayListExtra(ARCHIVED, archiveItems);
+			startActivity(intent);
 		}
 		return true;
 	}
-	*/
+	
 
 	private void addItem(String name) {
 		if (name.length() > 0) {
@@ -198,6 +183,15 @@ public class MainActivity extends Activity implements View.OnClickListener//, Di
             AlertDialog alertD = alertDialogBuilder.create();
  
             alertD.show();
+		}
+	}
+	
+	private void archiveItem(int itemId) {
+		if (itemId >= 0) {
+			Item item = (Item)itemList.getItemAtPosition(itemId);
+			Toast.makeText(getApplicationContext(), item.getName() + " archived", Toast.LENGTH_SHORT).show();
+			this.archiveItems.add(this.toDoItems.remove(itemId));
+			aa.notifyDataSetChanged();
 		}
 	}
 		
