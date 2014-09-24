@@ -6,8 +6,6 @@ import com.example.todolist.R;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -21,8 +19,8 @@ public class MainActivity extends Activity implements View.OnClickListener//, Di
 	private Button addItem;
 	private ListView itemList;
 	
-	ArrayList<String> toDoItems;
-	ArrayAdapter<String> aa;
+	private ArrayList<String> toDoItems;
+	private ArrayAdapter<String> aa;
 	
 	/*
 	String[] hot = {"Coffee", "Tea", "Hot Chocolate"};
@@ -47,6 +45,16 @@ public class MainActivity extends Activity implements View.OnClickListener//, Di
 		toDoItems = new ArrayList<String>();
 		aa = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, toDoItems);
 		itemList.setAdapter(aa);
+		
+		 itemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		      @Override  
+		      public void onItemClick(AdapterView<?> parent, View item, int position, long id) {  
+		        String thing = aa.getItem(position);  
+		        thing.toggleChecked();  
+		        ItemViewHolder viewHolder = (ItemViewHolder)item.getTag();  
+		        viewHolder.getCheckBox().setChecked(thing.isChecked());  
+		      }
+		 });
 	}
 
 	@Override
@@ -127,6 +135,7 @@ public class MainActivity extends Activity implements View.OnClickListener//, Di
 		}
 	}
 	
+	/*
 	private void deleteItem(int itemId) {
 		if (itemId >= 0) {
 			String itemName = (String)itemList.getItemAtPosition(itemId);
@@ -135,6 +144,7 @@ public class MainActivity extends Activity implements View.OnClickListener//, Di
 			aa.notifyDataSetChanged();
 		}
 	}
+	*/
 		
 	@Override
 	public void onClick(View v)
