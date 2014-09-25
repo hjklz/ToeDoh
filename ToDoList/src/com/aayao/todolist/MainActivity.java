@@ -1,8 +1,10 @@
 package com.aayao.todolist;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import com.aayao.todo.R;
+import com.aayao.todolist.data.GsonTodo;
 import com.aayao.todolist.data.Item;
 
 import android.os.Bundle;
@@ -24,6 +26,8 @@ public class MainActivity extends Activity implements View.OnClickListener
 	private Button addItem;
 	private ListView itemList;
 	
+	private GsonTodo dataManager;
+	
 	private int contextMenuParentID; //holds the parent of context menu (which item caused the menu to open)
 	
 	private ArrayList<Item> toDoItems;
@@ -41,6 +45,7 @@ public class MainActivity extends Activity implements View.OnClickListener
 		addItem = (Button)findViewById(R.id.addItem);
 		itemList = (ListView)findViewById(R.id.itemList);
 		registerForContextMenu(itemList);
+		dataManager = new GsonTodo(this);
 		
 		addItem.setOnClickListener(this);
 		
@@ -56,7 +61,14 @@ public class MainActivity extends Activity implements View.OnClickListener
 		        itemViewHolder viewHolder = (itemViewHolder)v.getTag();  
 		        viewHolder.getCheckBox().setChecked(item.getCheck());  
 		    }
-		});
+		});	
+	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+
+		toDoItems = dataManager.loadLists();
 		
 		// Set custom array adapter as the ListView's adapter.
 		aa = new listArrayAdapter(this, toDoItems);
@@ -120,6 +132,7 @@ public class MainActivity extends Activity implements View.OnClickListener
 			this.toDoItems.add(new Item(name));
 			this.aa.notifyDataSetChanged();
 			this.itemTxt.setText("");
+			dataManager.saveLists(toDoItems);
 		}
 	}
 	
@@ -129,6 +142,7 @@ public class MainActivity extends Activity implements View.OnClickListener
 			Toast.makeText(getApplicationContext(), item.getName() + " deleted", Toast.LENGTH_SHORT).show();
 			this.toDoItems.remove(itemId);
 			aa.notifyDataSetChanged();
+			dataManager.saveLists(toDoItems);
 		}
 	}
 	
@@ -157,6 +171,7 @@ public class MainActivity extends Activity implements View.OnClickListener
                     	item.setName(input.getText().toString());
                     	Toast.makeText(getApplicationContext(), item.getName() + " edited", Toast.LENGTH_SHORT).show();
             			aa.notifyDataSetChanged();
+            			dataManager.saveLists(toDoItems);
                     }
                 })
                 .setNegativeButton("Cancel",
@@ -179,6 +194,7 @@ public class MainActivity extends Activity implements View.OnClickListener
 			Toast.makeText(getApplicationContext(), item.getName() + " archived", Toast.LENGTH_SHORT).show();
 			this.archiveItems.add(this.toDoItems.remove(itemId));
 			aa.notifyDataSetChanged();
+			dataManager.saveLists(toDoItems);
 		}
 	}
 		
