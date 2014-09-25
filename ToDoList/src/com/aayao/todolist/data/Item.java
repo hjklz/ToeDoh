@@ -1,10 +1,10 @@
 package com.aayao.todolist.data;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+//import android.os.Parcel;
+//import android.os.Parcelable;
 
 
-public class Item implements Parcelable
+public class Item //implements Parcelable
 {
 	private String itemName;
 	private boolean isChecked;
@@ -14,6 +14,7 @@ public class Item implements Parcelable
 		isChecked = false;
 	}
 	
+	/*
 	private Item (Parcel in) {
 		itemName = in.readString();
 		isChecked = in.readByte() != 0;
@@ -35,7 +36,13 @@ public class Item implements Parcelable
 		    return new Item[size];
 		}
 	};
-
+	
+	@Override
+	public int describeContents()
+	{
+		return 0;
+	}
+	*/
 	
 	public String getName(){
 		return itemName;
@@ -58,9 +65,5 @@ public class Item implements Parcelable
 		return isChecked;
 	}
 
-	@Override
-	public int describeContents()
-	{
-		return 0;
-	}
+	
 }

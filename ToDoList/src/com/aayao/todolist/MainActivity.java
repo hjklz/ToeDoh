@@ -1,7 +1,6 @@
 package com.aayao.todolist;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import com.aayao.todo.R;
 import com.aayao.todolist.data.GsonTodo;
@@ -20,7 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 
-public class MainActivity extends Activity implements View.OnClickListener
+public class MainActivity extends Activity implements View.OnClickListener	//, DialogInterface.OnClickListener
 {
 	private EditText itemTxt;
 	private Button addItem;
@@ -30,11 +29,12 @@ public class MainActivity extends Activity implements View.OnClickListener
 	
 	private int contextMenuParentID; //holds the parent of context menu (which item caused the menu to open)
 	
-	private ArrayList<Item> toDoItems;
-	private ArrayAdapter<Item> aa;
-	
 	private ArrayList<Item> archiveItems;
-	public final static String ARCHIVED = "com.aayao.todolist.ArchivedItems";
+	private ArrayList<Item> toDoItems;
+	private ArrayAdapter<Item> aa;	
+	
+	private static final String FILENAME1 = "todo.sav";
+	private static final String FILENAME2 = "arch.sav";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -59,7 +59,7 @@ public class MainActivity extends Activity implements View.OnClickListener
 		        Item item = aa.getItem(position);  
 		        item.toggle();  
 		        itemViewHolder viewHolder = (itemViewHolder)v.getTag();  
-		        viewHolder.getCheckBox().setChecked(item.getCheck());  
+		        viewHolder.getCheckBox().setChecked(item.getCheck());
 		    }
 		});	
 	}
@@ -68,11 +68,20 @@ public class MainActivity extends Activity implements View.OnClickListener
 	protected void onStart() {
 		super.onStart();
 
-		toDoItems = dataManager.loadLists();
+		toDoItems = dataManager.loadLists(FILENAME1);
+		archiveItems = dataManager.loadLists(FILENAME2);
 		
 		// Set custom array adapter as the ListView's adapter.
 		aa = new listArrayAdapter(this, toDoItems);
 		itemList.setAdapter(aa);
+	}
+	
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
+		dataManager.saveLists(toDoItems, FILENAME1);
+		dataManager.saveLists(archiveItems, FILENAME2);
 	}
 
 	@Override
@@ -81,6 +90,21 @@ public class MainActivity extends Activity implements View.OnClickListener
 		super.onCreateOptionsMenu(menu);
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		super.onOptionsItemSelected(item);
+		
+		if (item.getTitle().equals("View Archived Items")) {
+			//Toast.makeText(getApplicationContext(), "works", Toast.LENGTH_SHORT).show();
+			Intent intent = new Intent(this, ArchiveActivity.class);
+			startActivity(intent);
+		} else if (item.getTitle().equals("Statistics")){
+			displayStats(getStats());
+		}
 		
 		return true;
 	}
@@ -113,18 +137,12 @@ public class MainActivity extends Activity implements View.OnClickListener
 	}
 	
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		super.onOptionsItemSelected(item);
-		
-		if (item.getTitle().equals("View Archived Items")) {
-			//Toast.makeText(getApplicationContext(), "works", Toast.LENGTH_SHORT).show();
-			Intent intent = new Intent(this, ArchiveActivity.class);
-			intent.putParcelableArrayListExtra(ARCHIVED, archiveItems);
-			startActivity(intent);
+	public void onClick(View v)
+	{
+		if (v == this.addItem) {
+			this.addItem(this.itemTxt.getText().toString());
 		}
-		return true;
 	}
-	
 
 	private void addItem(String name) {
 		if (name.length() > 0) {
@@ -132,7 +150,6 @@ public class MainActivity extends Activity implements View.OnClickListener
 			this.toDoItems.add(new Item(name));
 			this.aa.notifyDataSetChanged();
 			this.itemTxt.setText("");
-			dataManager.saveLists(toDoItems);
 		}
 	}
 	
@@ -142,7 +159,6 @@ public class MainActivity extends Activity implements View.OnClickListener
 			Toast.makeText(getApplicationContext(), item.getName() + " deleted", Toast.LENGTH_SHORT).show();
 			this.toDoItems.remove(itemId);
 			aa.notifyDataSetChanged();
-			dataManager.saveLists(toDoItems);
 		}
 	}
 	
@@ -170,12 +186,10 @@ public class MainActivity extends Activity implements View.OnClickListener
                         // get user input and set it to result
                     	item.setName(input.getText().toString());
                     	Toast.makeText(getApplicationContext(), item.getName() + " edited", Toast.LENGTH_SHORT).show();
-            			aa.notifyDataSetChanged();
-            			dataManager.saveLists(toDoItems);
+            			aa.notifyDataSetChanged();            			
                     }
                 })
-                .setNegativeButton("Cancel",
-                    new DialogInterface.OnClickListener() {
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -194,27 +208,56 @@ public class MainActivity extends Activity implements View.OnClickListener
 			Toast.makeText(getApplicationContext(), item.getName() + " archived", Toast.LENGTH_SHORT).show();
 			this.archiveItems.add(this.toDoItems.remove(itemId));
 			aa.notifyDataSetChanged();
-			dataManager.saveLists(toDoItems);
 		}
-	}
-		
-	@Override
-	public void onClick(View v)
-	{
-		if (v == this.addItem) {
-			this.addItem(this.itemTxt.getText().toString());
-		}
-		
 	}
 	
-	/*	
-	private void displayPopup(String title, String[] items) {
+	private String getStats() {
+		String stats ="";
+		int checked = 0, unchecked = 0;
+		
+		for (Item i: toDoItems) {
+			if (i.getCheck()) {
+				checked++;
+			} else {
+				unchecked++;
+			}
+		}
+		
+		stats += "Total # of TODO items checked: " + checked + "\nTotal # of TODO items unchecked: " + unchecked;
+		
+		checked = 0;
+		unchecked = 0;
+		
+		for (Item i: archiveItems) {
+			if (i.getCheck()) {
+				checked++;
+			} else {
+				unchecked++;
+			}
+		}
+		
+		stats += "\n\nTotal # of archived TODO items: " + archiveItems.size();
+		stats += "\nTotal # of checked archived TODO items: " + checked + "\nTotal # of unchecked archived TODO items: " + unchecked;
+		
+		return stats;
+	}
+	
+	private void displayStats(String stats) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(title);
-		builder.setItems(items,  this);
+		builder
+			.setTitle("Statistics")
+			.setMessage(stats)
+			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            })
+			.setCancelable(true);
+			
 		builder.show();
 	}
 	
+	/*
 	@Override
 	public void onClick(DialogInterface dialog, int item)
 	{

@@ -15,8 +15,6 @@ import android.util.Log;
 
 public class GsonTodo
 {
-	private static final String FILENAME = "todo.sav";
-
 	private Gson gson;
 	private Context ctx;
 
@@ -25,7 +23,7 @@ public class GsonTodo
 		gson = new Gson();
 	}
 	
-	public ArrayList<Item> loadLists() {
+	public ArrayList<Item> loadLists(String FILENAME) {
 		ArrayList<Item> Lists = new ArrayList<Item>();
 
 		try {
@@ -48,7 +46,7 @@ public class GsonTodo
 		return Lists;
 	}
 
-	public void saveLists(ArrayList<Item> todos) {
+	public void saveLists(ArrayList<Item> todos, String FILENAME) {
 		try {
 			FileOutputStream fos = ctx.openFileOutput(FILENAME, Context.MODE_PRIVATE);
 

@@ -3,14 +3,12 @@ package com.aayao.todolist;
 import java.util.ArrayList;
 
 import com.aayao.todo.R;
-import com.aayao.todo.R.layout;
-import com.aayao.todo.R.menu;
+import com.aayao.todolist.data.GsonTodo;
 import com.aayao.todolist.data.Item;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -25,12 +23,16 @@ public class ArchiveActivity extends Activity
 {
 	private ListView archiveList;
 	
+	private GsonTodo dataManager;
+	
 	private int contextMenuParentID; //holds the parent of context menu (which item caused the menu to open)
 	
 	private ArrayList<Item> archiveItems;
-	private ArrayAdapter<Item> aa;
+	private ArrayList<Item> toDoItems;
+	private ArrayAdapter<Item> aa;	
 	
-	public final static String ARCHIVED = "com.aayao.todolist.ArchivedItems";
+	private static final String FILENAME1 = "todo.sav";
+	private static final String FILENAME2 = "arch.sav";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -44,7 +46,7 @@ public class ArchiveActivity extends Activity
 		archiveList = (ListView)findViewById(R.id.archiveList);
 		registerForContextMenu(archiveList);
 		
-		archiveItems = getIntent().getParcelableArrayListExtra(ARCHIVED);
+		dataManager = new GsonTodo(this);
 		
 		archiveList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 		    @Override  
@@ -55,12 +57,28 @@ public class ArchiveActivity extends Activity
 		        viewHolder.getCheckBox().setChecked(item.getCheck());  
 		    }
 		});
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+
+		toDoItems = dataManager.loadLists(FILENAME1);
+		archiveItems = dataManager.loadLists(FILENAME2);
 		
 		// Set custom array adapter as the ListView's adapter.
 		aa = new listArrayAdapter(this, archiveItems);
 		archiveList.setAdapter(aa);
 	}
-
+	
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
+		dataManager.saveLists(toDoItems, FILENAME1);
+		dataManager.saveLists(archiveItems, FILENAME2);
+	}
+	
 	/**
 	 * Set up the {@link android.app.ActionBar}, if the API is available.
 	 */
@@ -99,6 +117,8 @@ public class ArchiveActivity extends Activity
 		super.onCreateContextMenu(menu, v, menuInfo);
 		getMenuInflater().inflate(R.menu.item_menu, menu);
 		
+		menu.getItem(2).setTitle("Unarchive");
+		
 		if (v.getId() == R.id.archiveList) {
 		    AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
 		    contextMenuParentID = acmi.position;
@@ -117,7 +137,7 @@ public class ArchiveActivity extends Activity
 	    } else if (item.getTitle().equals("Delete")) {
 	    	itemList.deleteItem(this, contextMenuParentID, archiveItems, aa);
 	    	return true;
-	    } else if (item.getTitle().equals("Archive")) {
+	    } else if (item.getTitle().equals("Unarchive")) {
 	    	//itemList.unarchiveItem(contextMenuParentID);
 	    	return true;
 	    } else {
