@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import com.aayao.todo.R;
 import com.aayao.todolist.data.GsonTodo;
 import com.aayao.todolist.data.Item;
+import com.aayao.todolist.extension.itemClick;
+import com.aayao.todolist.extension.listArrayAdapter;
+import com.aayao.todolist.helper.itemListHelper;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -22,6 +25,7 @@ import android.os.Build;
 public class ArchiveActivity extends Activity
 {
 	private ListView archiveList;
+	private itemListHelper itemList;
 	
 	private GsonTodo dataManager;
 	
@@ -38,8 +42,10 @@ public class ArchiveActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		
 		this.setTitle("Archived Items");
 		setContentView(R.layout.archive_main);
+		
 		// Show the Up button in the action bar.
 		setupActionBar();
 		
@@ -47,16 +53,6 @@ public class ArchiveActivity extends Activity
 		registerForContextMenu(archiveList);
 		
 		dataManager = new GsonTodo(this);
-		
-		archiveList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-		    @Override  
-		    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {  
-		        Item item = aa.getItem(position);  
-		        item.toggle();  
-		        itemViewHolder viewHolder = (itemViewHolder)v.getTag();  
-		        viewHolder.getCheckBox().setChecked(item.getCheck());  
-		    }
-		});
 	}
 
 	@Override
@@ -68,7 +64,10 @@ public class ArchiveActivity extends Activity
 		
 		// Set custom array adapter as the ListView's adapter.
 		aa = new listArrayAdapter(this, archiveItems);
+		archiveList.setOnItemClickListener(new itemClick(aa));	
 		archiveList.setAdapter(aa);
+		
+		itemList = new itemListHelper(this, aa);
 	}
 	
 	@Override
@@ -77,6 +76,37 @@ public class ArchiveActivity extends Activity
 		super.onPause();
 		dataManager.saveLists(toDoItems, FILENAME1);
 		dataManager.saveLists(archiveItems, FILENAME2);
+	}
+	
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		getMenuInflater().inflate(R.menu.item_menu, menu);
+		
+		menu.getItem(2).setTitle("Unarchive");
+		
+		if (v.getId() == R.id.archiveList) {
+		    AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
+		    contextMenuParentID = acmi.position;
+		}
+	}
+	
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		if (item.getTitle().equals("Edit")) {
+			itemList.editItem(contextMenuParentID, archiveList);
+			return true;
+	    } else if (item.getTitle().equals("Delete")) {
+	    	itemList.deleteItem(contextMenuParentID, archiveItems);
+	    	return true;
+	    } else if (item.getTitle().equals("Unarchive")) {
+	    	itemList.unarchiveItem(contextMenuParentID, archiveItems, toDoItems, archiveList);
+	    	return true;
+	    } else {
+	        return false;
+	    }		
 	}
 	
 	/**
@@ -111,38 +141,4 @@ public class ArchiveActivity extends Activity
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
-		getMenuInflater().inflate(R.menu.item_menu, menu);
-		
-		menu.getItem(2).setTitle("Unarchive");
-		
-		if (v.getId() == R.id.archiveList) {
-		    AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
-		    contextMenuParentID = acmi.position;
-		    
-		    //menu.add(contextMenuParent.getName());
-		    //menu.add(String.valueOf(contextMenuParent.getCheck()));
-		}
-	}
-	
-
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		if (item.getTitle().equals("Edit")) {
-			itemList.editItem(this, contextMenuParentID, archiveList, aa);
-			return true;
-	    } else if (item.getTitle().equals("Delete")) {
-	    	itemList.deleteItem(this, contextMenuParentID, archiveItems, aa);
-	    	return true;
-	    } else if (item.getTitle().equals("Unarchive")) {
-	    	//itemList.unarchiveItem(contextMenuParentID);
-	    	return true;
-	    } else {
-	        return false;
-	    }		
-	}
-
 }

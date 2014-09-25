@@ -1,4 +1,4 @@
-package com.aayao.todolist;
+package com.aayao.todolist.extension;
 
 import android.widget.CheckBox;
 import android.widget.TextView;

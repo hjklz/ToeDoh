@@ -1,4 +1,4 @@
-package com.aayao.todolist;
+package com.aayao.todolist.helper;
 
 import java.util.ArrayList;
 
@@ -16,9 +16,18 @@ import com.aayao.todo.R;
 import com.aayao.todolist.data.Item;
 
 
-public class itemList
+public class itemListHelper
 {
-	public static void addItem(Context c, String name, ArrayList<Item> items, ArrayAdapter<Item> aa, EditText itemTxt) {
+	private Context c;
+	private ArrayAdapter<Item> aa;
+	
+	
+	public itemListHelper(Context c, ArrayAdapter<Item> aa){
+		this.c = c;
+		this.aa = aa;
+	}
+		
+	public void addItem(String name, ArrayList<Item> items, EditText itemTxt) {
 		if (name.length() > 0) {
 			Toast.makeText(c, name + " added", Toast.LENGTH_SHORT).show();
 			items.add(new Item(name));
@@ -27,7 +36,7 @@ public class itemList
 		}
 	}
 	
-	public static void deleteItem(Context c, int itemId, ArrayList<Item> items, ArrayAdapter<Item> aa) {
+	public void deleteItem(int itemId, ArrayList<Item> items) {
 		if (itemId >= 0) {
 			Item item = items.get(itemId);
 			Toast.makeText(c, item.getName() + " deleted", Toast.LENGTH_SHORT).show();
@@ -36,7 +45,7 @@ public class itemList
 		}
 	}
 	
-	public static void editItem(Context c, int itemId, ListView itemList, ArrayAdapter<Item> aa) {
+	public void editItem(int itemId, ListView itemList) {
 		if (itemId >= 0) {
 			final Item item = (Item)itemList.getItemAtPosition(itemId);
 			
@@ -50,8 +59,7 @@ public class itemList
             // set edit_prompt.xml to be the layout file of the alertdialog builder
             alertDialogBuilder.setView(promptView);
  
-            final EditText input = (EditText) promptView.findViewById(R.id.userInput);
- 
+            final EditText input = (EditText) promptView.findViewById(R.id.userInput); 
             final Context con = c;
             final ArrayAdapter<Item> aa2 = aa;
             
@@ -66,8 +74,7 @@ public class itemList
             			aa2.notifyDataSetChanged();
                     }
                 })
-                .setNegativeButton("Cancel",
-                    new DialogInterface.OnClickListener() {
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -80,7 +87,7 @@ public class itemList
 		}
 	}
 	
-	public static void archiveItem(Context c, int itemId, ArrayList<Item> archive, ArrayList<Item> items, ArrayAdapter<Item> aa, ListView itemList) {
+	public void archiveItem(int itemId, ArrayList<Item> archive, ArrayList<Item> items, ListView itemList) {
 		if (itemId >= 0) {
 			Item item = (Item)itemList.getItemAtPosition(itemId);
 			Toast.makeText(c, item.getName() + " archived", Toast.LENGTH_SHORT).show();
@@ -89,7 +96,7 @@ public class itemList
 		}
 	}
 	
-	public static void unarchiveItem(Context c, int itemId, ArrayList<Item> archive, ArrayList<Item> items, ArrayAdapter<Item> aa, ListView itemList) {
+	public void unarchiveItem(int itemId, ArrayList<Item> archive, ArrayList<Item> items, ListView itemList) {
 		if (itemId >= 0) {
 			Item item = (Item)itemList.getItemAtPosition(itemId);
 			Toast.makeText(c, item.getName() + " unarchived", Toast.LENGTH_SHORT).show();

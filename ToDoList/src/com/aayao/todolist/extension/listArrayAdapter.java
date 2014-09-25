@@ -1,4 +1,4 @@
-package com.aayao.todolist;
+package com.aayao.todolist.extension;
 
 import java.util.List;
 
@@ -17,8 +17,7 @@ import android.widget.TextView;
 /** Custom adapter for displaying an array of Item objects. */  
 public class listArrayAdapter extends ArrayAdapter<Item>
 {
-	  
-    private LayoutInflater inflater;  
+	private LayoutInflater inflater;  
       
     public listArrayAdapter(Context c, List<Item> itemList ) {  
       super(c, R.layout.simplerow, R.id.rowTextView, itemList);  
@@ -47,7 +46,7 @@ public class listArrayAdapter extends ArrayAdapter<Item>
         // call findViewById() later when we reuse the row.  
         convertView.setTag(new itemViewHolder(textView,checkBox));  
   
-        // If CheckBox is toggled, update the planet it is tagged with.  
+        // If CheckBox is toggled, update the item it is tagged with.  
         checkBox.setOnClickListener( new View.OnClickListener() {  
           public void onClick(View v) {  
             CheckBox cb = (CheckBox) v ;  
@@ -65,10 +64,10 @@ public class listArrayAdapter extends ArrayAdapter<Item>
       }  
   
       // Tag the CheckBox with the Item it is displaying, so that we can  
-      // access the planet in onClick() when the CheckBox is toggled.
+      // access the items in onClick() when the CheckBox is toggled.
       checkBox.setTag(item);   
         
-      // Display planet data  
+      // Display items  
       checkBox.setChecked(item.getCheck());  
       textView.setText(item.getName());        
       
