@@ -107,5 +107,22 @@ public class ArchiveActivity extends Activity
 		    //menu.add(String.valueOf(contextMenuParent.getCheck()));
 		}
 	}
+	
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		if (item.getTitle().equals("Edit")) {
+			itemList.editItem(this, contextMenuParentID, archiveList, aa);
+			return true;
+	    } else if (item.getTitle().equals("Delete")) {
+	    	itemList.deleteItem(this, contextMenuParentID, archiveItems, aa);
+	    	return true;
+	    } else if (item.getTitle().equals("Archive")) {
+	    	//itemList.unarchiveItem(contextMenuParentID);
+	    	return true;
+	    } else {
+	        return false;
+	    }		
+	}
 
 }

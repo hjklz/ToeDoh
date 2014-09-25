@@ -31,15 +31,7 @@ public class MainActivity extends Activity implements View.OnClickListener
 	
 	private ArrayList<Item> archiveItems;
 	public final static String ARCHIVED = "com.aayao.todolist.ArchivedItems";
-	
-	/*
-	String[] hot = {"Coffee", "Tea", "Hot Chocolate"};
-	String[] wine = {"Burgundy", "Pinot", "Merlot"};
-	String[] beer = {"Guiness", "Pedigree", "Artois"};
-	String[] cocktail = {"Mary", "Vodka", "Colada"};
-	String[] can = {"Coke", "Fanta", "Lemonade"};
-	String currentMenu;*/
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -89,9 +81,6 @@ public class MainActivity extends Activity implements View.OnClickListener
 		if (v.getId() == R.id.itemList) {
 		    AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
 		    contextMenuParentID = acmi.position;
-		    
-		    //menu.add(contextMenuParent.getName());
-		    //menu.add(String.valueOf(contextMenuParent.getCheck()));
 		}
 	}
 	
@@ -101,11 +90,9 @@ public class MainActivity extends Activity implements View.OnClickListener
 			editItem(contextMenuParentID);
 			return true;
 	    } else if (item.getTitle().equals("Delete")) {
-	    	//Toast.makeText(this, "Delete called", Toast.LENGTH_SHORT).show();
 	    	deleteItem(contextMenuParentID);
 	    	return true;
 	    } else if (item.getTitle().equals("Archive")) {
-	    	//Toast.makeText(this, "Delete called", Toast.LENGTH_SHORT).show();
 	    	archiveItem(contextMenuParentID);
 	    	return true;
 	    } else {
