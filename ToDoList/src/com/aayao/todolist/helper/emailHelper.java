@@ -11,8 +11,8 @@ import com.aayao.todolist.data.Item;
 
 public class emailHelper
 {
-	Intent intent;
-	Context c;
+	private Intent intent;
+	private Context c;
 	
 	public emailHelper(Context c) {
 		this.c = c;
