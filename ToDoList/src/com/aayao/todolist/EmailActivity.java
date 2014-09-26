@@ -3,8 +3,6 @@ package com.aayao.todolist;
 import java.util.ArrayList;
 
 import com.aayao.todo.R;
-import com.aayao.todo.R.layout;
-import com.aayao.todo.R.menu;
 import com.aayao.todolist.data.GsonTodo;
 import com.aayao.todolist.data.Item;
 import com.aayao.todolist.extension.listArrayAdapter;
@@ -16,6 +14,7 @@ import android.app.Activity;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -36,13 +35,15 @@ public class EmailActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		
+		this.setTitle("Select Email Items");
+		
 		setContentView(R.layout.email_main);
 		
 		// Show the Up button in the action bar.
 		setupActionBar();
 		
 		emailList = (ListView)findViewById(R.id.emailList);
-		dataManager = new GsonTodo(this);
+		dataManager = new GsonTodo(this);		
 	}
 
 	@Override
@@ -72,6 +73,16 @@ public class EmailActivity extends Activity
 		return true;
 	}
 
+	public void send(View v) 
+	{
+		
+	}
+
+	public void cancel(View v)
+	{
+		finish();
+	}
+		
 	/**
 	 * Set up the {@link android.app.ActionBar}, if the API is available.
 	 */

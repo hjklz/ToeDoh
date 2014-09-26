@@ -34,7 +34,7 @@ public class ArchiveActivity extends Activity
 	
 	private ArrayList<Item> archiveItems;
 	private ArrayList<Item> toDoItems;
-	private ArrayAdapter<Item> aa;	
+	private ArrayAdapter<Item> aa;
 	
 	private static final String FILENAME1 = "todo.sav";
 	private static final String FILENAME2 = "arch.sav";
