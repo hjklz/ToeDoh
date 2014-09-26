@@ -101,6 +101,34 @@ public class MainActivity extends Activity implements View.OnClickListener	//, D
 			startActivity(intent);
 		} else if (item.getTitle().equals("Statistics")){
 			displayStats(new statsHelper(archiveItems, toDoItems).getStats());
+		} else if (item.getTitle().equals("Email Selection of TODO items")){
+			Intent intent = new Intent(this, EmailActivity.class);
+			intent.putExtra("todo", true);
+			startActivity(intent);
+		} else if (item.getTitle().equals("Email All items")){
+			Intent i = new Intent(Intent.ACTION_SEND);
+			
+			String text = "Non Archived Items: \n\n";
+			
+			for (Item it : toDoItems) {
+				text += it.getName() + "\t isChecked? " + String.valueOf(it.getCheck() + "\n");
+			}
+			
+			text += "Archived Items: \n\n";
+			
+			for (Item it : archiveItems) {
+				text += it.getName() + "\t isChecked? " + String.valueOf(it.getCheck() + "\n");
+			}
+			
+        	i.setType("message/rfc822");
+			i.putExtra(Intent.EXTRA_SUBJECT, "All Items from ToDoList");
+			i.putExtra(Intent.EXTRA_TEXT, text);
+			
+			try {
+			    this.startActivity(Intent.createChooser(i, "Send mail..."));
+			} catch (android.content.ActivityNotFoundException ex) {
+			    Toast.makeText(this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+			}
 		}
 		
 		return true;
@@ -127,6 +155,9 @@ public class MainActivity extends Activity implements View.OnClickListener	//, D
 	    	return true;
 	    } else if (item.getTitle().equals("Archive")) {
 	    	itemList.archiveItem(contextMenuParentID, archiveItems, toDoItems, toDoList);
+	    	return true;
+	    } else if (item.getTitle().equals("Email")) {
+	    	itemList.emailItem(contextMenuParentID, toDoList);
 	    	return true;
 	    } else {
 	        return false;

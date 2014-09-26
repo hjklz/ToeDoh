@@ -6,5 +6,6 @@
     <string name="add">Add Item</string>
     <string name="title_activity_archive">ArchiveActivity</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_email">EmailActivity</string>
 
 </resources>

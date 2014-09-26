@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -96,12 +97,31 @@ public class itemListHelper
 		}
 	}
 	
+	//this probably could be combined with archiveItem method, but I wanted to keep the toast for testing
 	public void unarchiveItem(int itemId, ArrayList<Item> archive, ArrayList<Item> items, ListView itemList) {
 		if (itemId >= 0) {
 			Item item = (Item)itemList.getItemAtPosition(itemId);
 			Toast.makeText(c, item.getName() + " unarchived", Toast.LENGTH_SHORT).show();
 			items.add(archive.remove(itemId));
 			aa.notifyDataSetChanged();
+		}
+	}
+	
+	public void emailItem(int itemId, ListView itemList) {
+		if (itemId >= 0) {
+			Item item = (Item)itemList.getItemAtPosition(itemId);
+			
+         	Intent i = new Intent(Intent.ACTION_SEND);
+        			
+        	i.setType("message/rfc822");
+			i.putExtra(Intent.EXTRA_SUBJECT, "Item from ToDoList");
+			i.putExtra(Intent.EXTRA_TEXT, item.getName() + "\t isChecked? " + String.valueOf(item.getCheck()));
+			
+			try {
+			    c.startActivity(Intent.createChooser(i, "Send mail..."));
+			} catch (android.content.ActivityNotFoundException ex) {
+			    Toast.makeText(c, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+			}
 		}
 	}
 }
