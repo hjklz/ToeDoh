@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">ToDoList</string>
+    <string name="app_name">aayao-ToDoList</string>
     <string name="action_settings">Settings</string>
     <string name="add">Add Item</string>
     <string name="title_activity_archive">ArchiveActivity</string>
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_email">EmailActivity</string>
+    <string name="arch">View Archived Items</string>
+    <string name="stats">Statistics</string>
+    <string name="emailTodo">Email Selection of TODO items</string>
+    <string name="emailArch">Email Selection of Archived items</string>
+    <string name="emailAll">Email All items</string>
+    <string name="edit">Edit</string>
+    <string name="del">Delete</string>
+    <string name="archi">Archive</string>
+    <string name="unarchi">Unarchive</string>
+    <string name="email">Email</string>
 
 </resources>

@@ -4,9 +4,10 @@
         android:id="@+id/archive"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="View Archived Items"/>
-    <item android:id="@+id/stats" android:title="Statistics"></item>
-    <item android:id="@+id/emailSel" android:title="Email Selection of TODO items"></item>
-    <item android:id="@+id/emailAll" android:title="Email All items"></item>
+        android:title="@string/arch"/>
+    <item android:id="@+id/stats" android:title="@string/stats"></item>
+    <item android:id="@+id/emailSel" android:title="@string/emailTodo"></item>
+    <item android:id="@+id/emailSel2" android:title="@string/emailArch"></item>
+    <item android:id="@+id/emailAll" android:title="@string/emailAll"></item>
 
 </menu>

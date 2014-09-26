@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -109,19 +108,10 @@ public class itemListHelper
 	
 	public void emailItem(int itemId, ListView itemList) {
 		if (itemId >= 0) {
-			Item item = (Item)itemList.getItemAtPosition(itemId);
+			ArrayList<Item> al = new ArrayList<Item>();
+			al.add((Item)itemList.getItemAtPosition(itemId));
 			
-         	Intent i = new Intent(Intent.ACTION_SEND);
-        			
-        	i.setType("message/rfc822");
-			i.putExtra(Intent.EXTRA_SUBJECT, "Item from ToDoList");
-			i.putExtra(Intent.EXTRA_TEXT, item.getName() + "\t isChecked? " + String.valueOf(item.getCheck()));
-			
-			try {
-			    c.startActivity(Intent.createChooser(i, "Send mail..."));
-			} catch (android.content.ActivityNotFoundException ex) {
-			    Toast.makeText(c, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
-			}
+			new emailHelper(c).send(al);
 		}
 	}
 }

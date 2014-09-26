@@ -7,6 +7,7 @@ import com.aayao.todolist.data.GsonTodo;
 import com.aayao.todolist.data.Item;
 import com.aayao.todolist.extension.itemClick;
 import com.aayao.todolist.extension.listArrayAdapter;
+import com.aayao.todolist.helper.emailHelper;
 import com.aayao.todolist.helper.itemListHelper;
 import com.aayao.todolist.helper.statsHelper;
 
@@ -45,6 +46,8 @@ public class MainActivity extends Activity implements View.OnClickListener	//, D
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		
+		this.setTitle("To Do Items");
 		
 		setContentView(R.layout.activity_main);
 		itemTxt = (EditText)findViewById(R.id.itemTxt);
@@ -95,40 +98,22 @@ public class MainActivity extends Activity implements View.OnClickListener	//, D
 	public boolean onOptionsItemSelected(MenuItem item) {
 		super.onOptionsItemSelected(item);
 		
-		if (item.getTitle().equals("View Archived Items")) {
+		if (item.getTitle().equals(getResources().getString(R.string.arch))) {
 			//Toast.makeText(getApplicationContext(), "works", Toast.LENGTH_SHORT).show();
 			Intent intent = new Intent(this, ArchiveActivity.class);
 			startActivity(intent);
-		} else if (item.getTitle().equals("Statistics")){
+		} else if (item.getTitle().equals(getResources().getString(R.string.stats))){
 			displayStats(new statsHelper(archiveItems, toDoItems).getStats());
-		} else if (item.getTitle().equals("Email Selection of TODO items")){
+		} else if (item.getTitle().equals(getResources().getString(R.string.emailTodo))){
 			Intent intent = new Intent(this, EmailActivity.class);
 			intent.putExtra("todo", true);
 			startActivity(intent);
-		} else if (item.getTitle().equals("Email All items")){
-			Intent i = new Intent(Intent.ACTION_SEND);
-			
-			String text = "Non Archived Items: \n\n";
-			
-			for (Item it : toDoItems) {
-				text += it.getName() + "\t isChecked? " + String.valueOf(it.getCheck() + "\n");
-			}
-			
-			text += "Archived Items: \n\n";
-			
-			for (Item it : archiveItems) {
-				text += it.getName() + "\t isChecked? " + String.valueOf(it.getCheck() + "\n");
-			}
-			
-        	i.setType("message/rfc822");
-			i.putExtra(Intent.EXTRA_SUBJECT, "All Items from ToDoList");
-			i.putExtra(Intent.EXTRA_TEXT, text);
-			
-			try {
-			    this.startActivity(Intent.createChooser(i, "Send mail..."));
-			} catch (android.content.ActivityNotFoundException ex) {
-			    Toast.makeText(this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
-			}
+		} else if (item.getTitle().equals(getResources().getString(R.string.emailArch))){
+			Intent intent = new Intent(this, EmailActivity.class);
+			intent.putExtra("todo", false);
+			startActivity(intent);
+		} else if (item.getTitle().equals(getResources().getString(R.string.emailAll))){
+			new emailHelper(this).sendAll(toDoItems, archiveItems);
 		}
 		
 		return true;
@@ -147,16 +132,16 @@ public class MainActivity extends Activity implements View.OnClickListener	//, D
 	
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		if (item.getTitle().equals("Edit")) {
+		if (item.getTitle().equals(getResources().getString(R.string.edit))) {
 			itemList.editItem(contextMenuParentID, toDoList);
 			return true;
-	    } else if (item.getTitle().equals("Delete")) {
+	    } else if (item.getTitle().equals(getResources().getString(R.string.del))) {
 	    	itemList.deleteItem(contextMenuParentID, toDoItems);
 	    	return true;
-	    } else if (item.getTitle().equals("Archive")) {
+	    } else if (item.getTitle().equals(getResources().getString(R.string.arch))) {
 	    	itemList.archiveItem(contextMenuParentID, archiveItems, toDoItems, toDoList);
 	    	return true;
-	    } else if (item.getTitle().equals("Email")) {
+	    } else if (item.getTitle().equals(getResources().getString(R.string.email))) {
 	    	itemList.emailItem(contextMenuParentID, toDoList);
 	    	return true;
 	    } else {

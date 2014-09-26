@@ -114,7 +114,7 @@ public class ArchiveActivity extends Activity
 		super.onCreateContextMenu(menu, v, menuInfo);
 		getMenuInflater().inflate(R.menu.item_menu, menu);
 		
-		menu.getItem(2).setTitle("Unarchive");
+		menu.getItem(2).setTitle(getResources().getString(R.string.unarchi));
 		
 		if (v.getId() == R.id.archiveList) {
 		    AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
@@ -125,21 +125,21 @@ public class ArchiveActivity extends Activity
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		if (item.getTitle().equals("Edit")) {
+		if (item.getTitle().equals(getResources().getString(R.string.edit))) {
 			itemList.editItem(contextMenuParentID, archiveList);
 			return true;
-	    } else if (item.getTitle().equals("Delete")) {
+	    } else if (item.getTitle().equals(getResources().getString(R.string.del))) {
 	    	itemList.deleteItem(contextMenuParentID, archiveItems);
 	    	return true;
-	    } else if (item.getTitle().equals("Unarchive")) {
+	    } else if (item.getTitle().equals(getResources().getString(R.string.unarchi))) {
 	    	itemList.unarchiveItem(contextMenuParentID, archiveItems, toDoItems, archiveList);
 	    	return true;
-	    } else if (item.getTitle().equals("Email")) {
+	    } else if (item.getTitle().equals(getResources().getString(R.string.email))) {
 	    	itemList.emailItem(contextMenuParentID, archiveList);
 	    	return true;
 	    } else {
 	        return false;
-	    }		
+	    }
 	}
 	
 	/**

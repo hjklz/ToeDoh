@@ -6,6 +6,7 @@ import com.aayao.todo.R;
 import com.aayao.todolist.data.GsonTodo;
 import com.aayao.todolist.data.Item;
 import com.aayao.todolist.extension.listArrayAdapter;
+import com.aayao.todolist.helper.emailHelper;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -75,7 +76,13 @@ public class EmailActivity extends Activity
 
 	public void send(View v) 
 	{
+		for (Item i: emailItems) {
+			if (!i.getCheck()) {
+				emailItems.remove(i);
+			}
+		}
 		
+		new emailHelper(this).send(emailItems);
 	}
 
 	public void cancel(View v)
