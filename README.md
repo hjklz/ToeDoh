@@ -27,3 +27,10 @@ http://examples.javacodegeeks.com/android/core/ui/alertdialog/android-prompt-use
 User:fiXedd
 The Google Android API emailing with intents was adapted from the stack overflow answer given by the above user
 http://stackoverflow.com/questions/2197741/how-can-i-send-emails-from-my-android-application
+
+Some additional notes
+
+the options menu on the main screen contains most of the navigation features and todo list operations
+item specific operations are done by hold-clicking them
+checking/unchecking is done by tapping the item
+when viewing the archive or emailing you can navigate back to main screen through the use of the action bar at top right
