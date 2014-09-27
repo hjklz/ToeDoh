@@ -1,8 +1,8 @@
 ToeDoh
 ======
 
-TODO list
-
+ToDoList
+Copyright (C) 2014  Andy Ao Yao
 
 Sources/References
 
