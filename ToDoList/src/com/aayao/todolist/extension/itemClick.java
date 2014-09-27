@@ -1,3 +1,16 @@
+/*
+    ToDoList
+    Copyright (C) 2014  Andy Ao Yao
+    
+    a full notice is found at 
+    https://github.com/hjklz/ToeDoh/blob/master/LICENSE
+    
+    syntax for listener below was adapted from 
+    Andrew Lim Chong Liang 
+    Copyright Andrew Lim Chong Liang
+    
+    http://windrealm.org/tutorials/android/listview-with-checkboxes-without-listactivity.php
+*/
 package com.aayao.todolist.extension;
 
 import android.view.View;

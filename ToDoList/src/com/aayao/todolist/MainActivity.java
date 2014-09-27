@@ -1,3 +1,11 @@
+/*
+    ToDoList
+    Copyright (C) 2014  Andy Ao Yao
+    
+    a full notice is found at 
+    https://github.com/hjklz/ToeDoh/blob/master/LICENSE
+*/
+
 package com.aayao.todolist;
 
 import java.util.ArrayList;
@@ -119,6 +127,9 @@ public class MainActivity extends Activity implements View.OnClickListener	//, D
 		return true;
 	}
 	
+	//the following two context item methods were adapted from stack overflow user
+	//PG_ Android
+	//http://stackoverflow.com/questions/18632331/using-contextmenu-with-listview-in-android
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
@@ -138,7 +149,7 @@ public class MainActivity extends Activity implements View.OnClickListener	//, D
 	    } else if (item.getTitle().equals(getResources().getString(R.string.del))) {
 	    	itemList.deleteItem(contextMenuParentID, toDoItems);
 	    	return true;
-	    } else if (item.getTitle().equals(getResources().getString(R.string.arch))) {
+	    } else if (item.getTitle().equals(getResources().getString(R.string.archi))) {
 	    	itemList.archiveItem(contextMenuParentID, archiveItems, toDoItems, toDoList);
 	    	return true;
 	    } else if (item.getTitle().equals(getResources().getString(R.string.email))) {

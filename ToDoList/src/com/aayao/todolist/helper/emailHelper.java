@@ -1,3 +1,11 @@
+/*
+    ToDoList
+    Copyright (C) 2014  Andy Ao Yao
+    
+    a full notice is found at 
+    https://github.com/hjklz/ToeDoh/blob/master/LICENSE
+*/
+
 package com.aayao.todolist.helper;
 
 import java.util.ArrayList;
@@ -32,6 +40,9 @@ public class emailHelper
 		return text;
 	}	
 	
+	
+	// send and sendAll adapted from stack overflow user fiXedd
+	// http://stackoverflow.com/questions/2197741/how-can-i-send-emails-from-my-android-application
 	public void send(ArrayList<Item> items) {
 		if (items.isEmpty()) {
 			return;

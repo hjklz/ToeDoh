@@ -1,3 +1,11 @@
+/*
+    ToDoList
+    Copyright (C) 2014  Andy Ao Yao
+    
+    a full notice is found at 
+    https://github.com/hjklz/ToeDoh/blob/master/LICENSE
+*/
+
 package com.aayao.todolist.helper;
 
 import java.util.ArrayList;
@@ -45,6 +53,10 @@ public class itemListHelper
 		}
 	}
 	
+	//the follwing code style for creating a dialog box was adapted from
+	//Byron Kiourtzoglou, co-founder of java code geeks
+	//copyright 2010-2014, Exelixis Media Ltd
+	//http://examples.javacodegeeks.com/android/core/ui/alertdialog/android-prompt-user-input-dialog-example/
 	public void editItem(int itemId, ListView itemList) {
 		if (itemId >= 0) {
 			final Item item = (Item)itemList.getItemAtPosition(itemId);

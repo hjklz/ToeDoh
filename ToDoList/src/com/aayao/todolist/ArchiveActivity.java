@@ -1,3 +1,11 @@
+/*
+    ToDoList
+    Copyright (C) 2014  Andy Ao Yao
+    
+    a full notice is found at 
+    https://github.com/hjklz/ToeDoh/blob/master/LICENSE
+*/
+
 package com.aayao.todolist;
 
 import java.util.ArrayList;
@@ -109,6 +117,10 @@ public class ArchiveActivity extends Activity
 		return super.onOptionsItemSelected(item);
 	}
 	
+	
+	//the following two context item methods were adapted from stack overflow user
+	//PG_ Android
+	//http://stackoverflow.com/questions/18632331/using-contextmenu-with-listview-in-android
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);

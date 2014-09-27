@@ -1,3 +1,11 @@
+/*
+    ToDoList
+    Copyright (C) 2014  Andy Ao Yao
+    
+    a full notice is found at 
+    https://github.com/hjklz/ToeDoh/blob/master/LICENSE
+*/
+
 package com.aayao.todolist;
 
 import java.util.ArrayList;

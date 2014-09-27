@@ -1,3 +1,14 @@
+/*
+    ToDoList
+    Copyright (C) 2014  Andy Ao Yao
+    
+    a full notice is found at 
+    https://github.com/hjklz/ToeDoh/blob/master/LICENSE
+    
+    NOTE: There was an experiment here with passing values with intents
+    I determined using Gson would be simpler and easier
+*/
+
 package com.aayao.todolist.data;
 
 //import android.os.Parcel;

@@ -1,3 +1,14 @@
+/*
+    ToDoList
+    Copyright (C) 2014  Andy Ao Yao
+    
+    a full notice is found at 
+    https://github.com/hjklz/ToeDoh/blob/master/LICENSE
+    
+    Adapted from CMPUT 301 Fall2014 lab3
+    from the University of Alberta
+*/
+
 package com.aayao.todolist.data;
 
 import java.io.BufferedReader;
